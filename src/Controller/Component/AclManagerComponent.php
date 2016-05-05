@@ -286,7 +286,7 @@ class AclManagerComponent extends Component
         $files = $dir->findRecursive('.*Controller\.php');
         $results = [];
         foreach ($files as $file) {
-            $controller = str_replace(App::path('Controller'), '', $file);
+            $controller = str_replace(['/', 'Controller'], ['\\', null], $controller);
             $controller = explode('.', $controller)[0];
             $controller = str_replace('Controller', '', $controller);
             array_push($results, $controller);
