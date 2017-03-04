@@ -9,13 +9,13 @@
  * @link     https://github.com/JcPires/CakePhp3-AclManager
  */
 
-namespace Alescx\Acl\AclManager\Event;
+namespace Alescx\AclManager\Event;
 
 use Acl\Controller\Component\AclComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use JcPires\AclManager\Controller\Component\AclManagerComponent;
+use Alescx\AclManager\Controller\Component\AclManagerComponent;
 
 /**
  * Class PermissionsEditor
