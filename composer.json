@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AclManager\\": "src"
+            "Alescx\\AclManager\\": "src"
         }
     },
     "minimum-stability" : "dev",
