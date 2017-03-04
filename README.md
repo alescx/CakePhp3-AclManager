@@ -56,7 +56,7 @@ NB: !!! Don't forget to delete those lines after building !!!
 On your Admin/GroupsController.php
 
 ```
-    use JcPires\AclManager\Event\PermissionsEditor;
+    use Alescx\AclManager\Event\PermissionsEditor;
 ```
 
 Add basics permissions, on your action add
