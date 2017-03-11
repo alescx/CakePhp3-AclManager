@@ -17,8 +17,8 @@ use App\Model\Entity\Group;
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
 use Cake\Core\App;
-use Cake\Core\Plugin;
 use Cake\Core\Configure;
+use Cake\Core\Plugin;
 use Cake\Filesystem\Folder;
 use ReflectionClass;
 use ReflectionMethod;
@@ -76,7 +76,7 @@ class AclManagerComponent extends Component
      */
     public function acosBuilder()
     {
-        $srcControllers     = $this->getResources();
+        $srcControllers = $this->getResources();
         $pluginsControllers = $this->getPluginsResources();
         //$this->__checkNodeOrSave("", "", null);
         $this->__setAcos($srcControllers);
@@ -124,8 +124,8 @@ class AclManagerComponent extends Component
      *
      * @return bool return true if acos saved
      */
-     private function __setAcos($ressources)
-     {
+    private function __setAcos($ressources)
+    {
         $root = $this->__checkNodeOrSave($this->_base, $this->_base, null);
         unset($ressources[0]);
         foreach ($ressources as $controllers) {
@@ -188,26 +188,26 @@ class AclManagerComponent extends Component
             }
         }
         return true;
-     }
+    }
 
-     /**
-      * Plugins Acos Builder, find all public actions from plugin's controllers and stored them
-      * with Acl tree behavior to the acos table.
-      * Alias first letter of Controller will
-      * be capitalized and actions will be lowercase
-      *
-      * @return bool return true if acos saved
-      */
+    /**
+     * Plugins Acos Builder, find all public actions from plugin's controllers and stored them
+     * with Acl tree behavior to the acos table.
+     * Alias first letter of Controller will
+     * be capitalized and actions will be lowercase
+     *
+     * @return bool return true if acos saved
+     */
     private function __setPluginsAcos($ressources)
     {
-        foreach ( $ressources as $controllers ) {
+        foreach ($ressources as $controllers) {
 
 
-            foreach ( $controllers as $controller => $actions ){
+            foreach ($controllers as $controller => $actions) {
                 $parent = [];
                 $path = [];
                 $tmp = [];
-                $pluginName= '';
+                $pluginName = '';
                 $root = '';
 
                 $tmp = explode('/', $controller);
@@ -220,17 +220,17 @@ class AclManagerComponent extends Component
 
                 if (!empty($tmp) && isset($tmp[1])) {
                     for ($i = 1; $i <= $countTmp; $i++) {
-                        if (  $path[$i - 1] != $tmp[$i - 1] ) {
+                        if ($path[$i - 1] != $tmp[$i - 1]) {
                             $path[$i] = $path[$i - 1];
                         } else {
                             $path[$i] = '';
                         }
-                        if ( $i >= 1 && isset($tmp[$i - 1]) ) {
+                        if ($i >= 1 && isset($tmp[$i - 1])) {
                             if ($path[$i]) {
                                 $path[$i] = $path[$i] . $slash;
                             }
                             $path[$i] = $path[$i] . $tmp[$i - 1];
-                            if ( $tmp[$i - 1] == '') {
+                            if ($tmp[$i - 1] == '') {
                                 $tmp[$i - 1] = "Controller";
                             }
                             $new = $this->__checkNodeOrSave(
@@ -282,11 +282,12 @@ class AclManagerComponent extends Component
     private function __getControllers()
     {
         $path = App::path('Controller');
-        $dir = new Folder($path[0]);
+        $path = $path[0];
+        $dir = new Folder($path);
         $files = $dir->findRecursive('.*Controller\.php');
         $results = [];
         foreach ($files as $file) {
-            $controller = str_replace(['/', 'Controller'], ['\\', null], $controller);
+            $controller = str_replace([$path, '/'], [null, '\\'], $file);
             $controller = explode('.', $controller)[0];
             $controller = str_replace('Controller', '', $controller);
             array_push($results, $controller);
@@ -305,14 +306,14 @@ class AclManagerComponent extends Component
     {
         $path = App::path('Controller');
         $plugins = Plugin::loaded();
-        $dir = new Folder(ROOT . DS . "Plugins". DS);
+        $dir = new Folder(ROOT . DS . "Plugins" . DS);
         $files = $dir->findRecursive('.*Controller\.php');
         $results = [];
         foreach ($files as $file) {
-            $controller = str_replace(ROOT . DS . "Plugins". DS , '', $file);
+            $controller = str_replace(ROOT . DS . "Plugins" . DS, '', $file);
             $controller = explode('.', $controller)[0];
             $controller = str_replace('Controller', '', $controller);
-            $controller = str_replace('src'.DS.DS, '', $controller);
+            $controller = str_replace('src' . DS . DS, '', $controller);
             array_push($results, $controller);
         }
         return $results;
@@ -332,7 +333,7 @@ class AclManagerComponent extends Component
         $actions = $class->getMethods(ReflectionMethod::IS_PUBLIC);
         $controllerName = str_replace("\\", "/", $controllerName);
         $results = [$controllerName => []];
-        $ignoreList = ['beforeFilter', 'afterFilter', 'initialize', 'beforeRender'];
+        $ignoreList = ['__construct', 'beforeFilter', 'afterFilter', 'initialize', 'beforeRender'];
         foreach ($actions as $action) {
             if ($action->class == $className
                 && !in_array($action->name, $ignoreList)
@@ -354,8 +355,8 @@ class AclManagerComponent extends Component
     {
         $className = $controllerName . 'Controller';
         $exploded = explode(DS, $className);
-        $className = str_replace($exploded[0] , '',$className);
-        $className = $exploded[0] . DS . 'Controller'. $className;
+        $className = str_replace($exploded[0], '', $className);
+        $className = $exploded[0] . DS . 'Controller' . $className;
         $class = new ReflectionClass($className);
         $actions = $class->getMethods(ReflectionMethod::IS_PUBLIC);
         $controllerName = str_replace("\\", "/", $controllerName);
@@ -374,9 +375,9 @@ class AclManagerComponent extends Component
     /**
      * Check if the aco exist and store it if empty
      *
-     * @param string $path     the path like App/Admin/Admin/home
-     * @param string $alias    the name of the alias like home
-     * @param null   $parentId the parent id
+     * @param string $path the path like App/Admin/Admin/home
+     * @param string $alias the name of the alias like home
+     * @param null $parentId the parent id
      *
      * @return object
      */
@@ -400,8 +401,8 @@ class AclManagerComponent extends Component
     /**
      * Add all basics acos/aros rules when add a new aro
      *
-     * @param Group $aro    the Group to check
-     * @param Aro   $parent the parent Aro
+     * @param Group $aro the Group to check
+     * @param Aro $parent the parent Aro
      *
      * @return bool return  true/false
      */
@@ -424,8 +425,8 @@ class AclManagerComponent extends Component
      * Set the alias for actions like
      * App/Controller/action or App/Folder/Controller/action
      *
-     * @param array  $actions list of actions
-     * @param string $_base   the base like App
+     * @param array $actions list of actions
+     * @param string $_base the base like App
      *
      * @return array return actions with Aco alias
      */
@@ -452,9 +453,9 @@ class AclManagerComponent extends Component
     /**
      * Edit all permissions for aro specified
      *
-     * @param Group  $group the group to check
+     * @param Group $group the group to check
      * @param string $alias the alias like App/Admin/Admin/home
-     * @param int    $data  the request->data 1 or 0 (Allowed/Deny)
+     * @param int $data the request->data 1 or 0 (Allowed/Deny)
      *
      * @return bool return true/false
      */
@@ -509,7 +510,7 @@ class AclManagerComponent extends Component
     {
         $resources = [];
         foreach ($controllers as $controller) {
-            if ( $plugin ) {
+            if ($plugin) {
                 $actions = $this->__getPluginsActions($controller);
                 $excluded = $this->__getExcludeProperty($controller, true);
             } else {
@@ -518,9 +519,9 @@ class AclManagerComponent extends Component
             }
 
             if (is_array($excluded)) {
-                if ( $plugin ) {
+                if ($plugin) {
                     $controllerName = str_replace("\\", "/", $controller);
-                    $controllerName = "App/".$controllerName;
+                    $controllerName = "App/" . $controllerName;
                 } else {
                     $controllerName = str_replace("\\", "/", $controller);
                 }
@@ -539,6 +540,7 @@ class AclManagerComponent extends Component
         }
         return $resources;
     }
+
     /**
      * Get all exclude actions from public static AclActionsExclude var in controller
      *
@@ -548,7 +550,7 @@ class AclManagerComponent extends Component
      */
     private function __getExcludeProperty($controllerName, $plugin = false)
     {
-        if ( $plugin ) {
+        if ($plugin) {
             $className = $controllerName . 'Controller';
         } else {
             $className = 'App\\Controller\\' . $controllerName . 'Controller';
